@@ -1,0 +1,11 @@
+[package]
+name = "rusty_dodge_v2"
+version = "0.1.0"
+authors = ["Alex Jones <alexander.jones@softwire.com>"]
+
+[dependencies]
+nalgebra = "*"
+num = "*"
+time = "*"
+generic_game = { git = "https://github.com/Jonesey13/generic_game.git" }
+rand = "*"
