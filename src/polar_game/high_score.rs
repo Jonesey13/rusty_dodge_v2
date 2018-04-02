@@ -1,6 +1,6 @@
 use time;
-use rendering::PlainText;
-use na::{Vector2, Vector4, Matrix4, Rotation2};
+use rendering::{PlainText, TextAlign};
+use na::{Vector2, Vector3, Vector4, Matrix4, Rotation2};
 use std::fs::File;
 use std::string::String;
 use std::io::{Read, Write};
@@ -40,22 +40,24 @@ impl HighScore {
     pub fn get_score_text(&self) -> PlainText {
         PlainText {
             content: self.get_score_string(),
-            position: Vector2::new(0.8, 0.9),
-            scale: Vector2::new(1.0, 1.0),
+            position: Vector3::new(0.8, 0.9, 0.0),
+            scale: Vector2::new(0.1, 0.1),
             transform: *Rotation2::new(0.0).matrix(),
             color: Vector4::new(1.0, 1.0, 1.0, 1.0),
-            fixed: true
+            fixed: true,
+            align: TextAlign::Center
         }
     }
 
     pub fn get_record_text(&self) -> PlainText {
         PlainText {
             content: self.get_record_string(),
-            position: Vector2::new(0.8, 0.8),
-            scale: Vector2::new(1.0, 1.0),
+            position: Vector3::new(0.8, 0.8, 0.0),
+            scale: Vector2::new(0.1, 0.1),
             transform: *Rotation2::new(0.0).matrix(),
             color: Vector4::new(1.0, 1.0, 1.0, 1.0),
-            fixed: true
+            fixed: true,
+            align: TextAlign::Center
         }
     }
 

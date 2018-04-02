@@ -12,7 +12,6 @@ mod high_score;
 pub mod builder;
 pub use self::builder::PolarGameBuilder;
 
-
 use self::player::Player;
 use self::object::{Part,Object,Point,collision};
 use self::flare::Flare;
@@ -29,12 +28,9 @@ use gg::games::{GameInput, Game};
 use gg::input::keyboard::KeyboardInput;
 use gg::input::joystick::JoystickInput;
 use gg::games::view_details::{PolarViewDetails, ViewDetails};
-use gg::rendering::renderables::Renderable;
-use gg::rendering::polar_pixel::PolarPixel;
-use gg::rendering::text::PlainText;
+use gg::rendering::{PlainText, StandardPrimitive, PolarPixel, WindowSpec, StandardRenderable};
 use gg::debug::*;
-use gg::debug;
-use na::{Vector2, Vector4, Rotation2};
+use na::{Vector4, Rotation2};
 
 pub struct PolarGame{
     player: Player,
@@ -82,25 +78,27 @@ impl PolarGame {
 }
 
 impl Game for PolarGame {
+    type Primitive = StandardPrimitive;
+
     fn init(&mut self) {
         self.time = Times::new(time::precise_time_s());
         self.high_score.reset();
     }
 
     fn update_input(&mut self) {
-        self.input_keys.jump_radial = (self.external_input.kbd.up as isize - (self.external_input.kbd.down as isize)) as f64 * 0.3;
+        self.input_keys.jump_radial = (self.external_input.kbd.get_up() as isize - (self.external_input.kbd.get_down() as isize)) as f64 * 0.3;
         
-        if self.external_input.gamepad.y_axis.abs() > 0.1 {
-            self.input_keys.jump_radial = self.external_input.gamepad.y_axis * 0.3;
+        if self.external_input.gamepad.get_y_axis().abs() > 0.1 {
+            self.input_keys.jump_radial = self.external_input.gamepad.get_y_axis() * 0.3;
         }
        
-        self.input_keys.jump_angle = (self.external_input.kbd.right as isize - (self.external_input.kbd.left as isize)) as f64 * 0.3;
+        self.input_keys.jump_angle = (self.external_input.kbd.get_right() as isize - (self.external_input.kbd.get_left() as isize)) as f64 * 0.3;
 
-        if self.external_input.gamepad.x_axis.abs() > 0.1 {
-            self.input_keys.jump_angle = self.external_input.gamepad.x_axis * 0.3;
+        if self.external_input.gamepad.get_x_axis().abs() > 0.1 {
+            self.input_keys.jump_angle = self.external_input.gamepad.get_x_axis() * 0.3;
         }
         
-        match (self.external_input.kbd.p, self.input_keys.pause, self.input_keys.pause_lock) {
+        match (self.external_input.kbd.get_p(), self.input_keys.pause, self.input_keys.pause_lock) {
             (true, false, false) => { self.input_keys.pause = true; self.input_keys.pause_lock = true; },
             (false, true, true) => { self.input_keys.pause_lock = false; },
             (true, true, false) => { self.input_keys.pause = false; self.input_keys.pause_lock = true; },
@@ -108,7 +106,7 @@ impl Game for PolarGame {
             _ => () 
         };
         
-        self.input_keys.reset = self.external_input.kbd.r;
+        self.input_keys.reset = self.external_input.kbd.get_r();
     }
 
     fn update_logic(&mut self, t_step: f64){
@@ -168,7 +166,7 @@ impl Game for PolarGame {
         ViewDetails::Polar(self.view_details.clone())
     }
 
-    fn get_renderables(&self) -> Vec<Box<Renderable>> {
+    fn get_renderables(&mut self, _: WindowSpec) -> Vec<Box<StandardRenderable>> {
         debug_clock_start("Render::get_renderables");
         let mut rend_vec: Vec<Part> = Vec::new();
         for f in self.frame.get_render_parts().into_iter(){
@@ -185,8 +183,8 @@ impl Game for PolarGame {
         }
         debug_clock_stop("Render::get_renderables::flares");
         rend_vec.push(sun_part);
-        let mut output: Vec<Box<Renderable>> = rend_vec.into_iter()
-            .map(|p| -> Box<Renderable> {Box::new(PolarPixel::from(p))}).collect();
+        let mut output: Vec<Box<StandardRenderable>> = rend_vec.into_iter()
+            .map(|p| -> Box<StandardRenderable> {Box::new(PolarPixel::from(p))}).collect();
 
         let score_text = self.high_score.get_score_text();
         let record_text = self.high_score.get_record_text();
