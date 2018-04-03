@@ -3,12 +3,16 @@ extern crate nalgebra as na;
 extern crate time;
 extern crate num;
 extern crate rand;
+#[macro_use]
+extern crate glium;
+extern crate rusttype;
 
 use gg::debug::*;
-use gg::{debug, rendering, input, window, handler_basic, Handler};
+use gg::{debug, input, window, handler_basic, Handler};
 use gg::rendering::DisplaySettings;
 use std::env;
 mod polar_game;
+mod rendering;
 
 fn main() {
     env::set_var("RUST_BACKTRACE", "full");
@@ -23,7 +27,7 @@ fn main() {
             ..Default::default()
     };
 
-    let renderer = Box::new(rendering::glium_renderer::GliumRenderer::new(display_settings));
+    let renderer = Box::new(::rendering::glium_renderer::GliumRenderer::new(display_settings));
     let input_handler: Box<input::InputHandler> = Box::new(input::multihandler::MultiInput::new());
     let window_handler: Box<window::WindowHandler> = Box::new(window::GlutinInput::new());
 

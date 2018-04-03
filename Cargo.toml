@@ -9,3 +9,5 @@ num = "*"
 time = "*"
 generic_game = { path="C:/Users/Jonesey13/projects/generic_game" }
 rand = "*"
+glium = "*"
+rusttype = "*"

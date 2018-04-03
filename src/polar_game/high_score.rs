@@ -1,6 +1,6 @@
-use time;
-use rendering::{PlainText, TextAlign};
-use na::{Vector2, Vector3, Vector4, Matrix4, Rotation2};
+use ::rendering::renderables::text;
+use gg::rendering::{TextAlign, PlainText};
+use na::{Vector2, Vector3, Vector4, Rotation2};
 use std::fs::File;
 use std::string::String;
 use std::io::{Read, Write};

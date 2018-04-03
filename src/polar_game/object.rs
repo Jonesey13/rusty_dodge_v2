@@ -4,7 +4,7 @@ Handles Basic Polar Objects and Collision Detection
 
 use std::ops::*;
 use na::{Vector2, Vector4};
-use rendering::PolarPixel;
+use ::rendering::PolarPixel;
 
 pub trait Object{
     fn set_position(&mut self, _: Point);

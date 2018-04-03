@@ -28,9 +28,9 @@ use gg::games::{GameInput, Game};
 use gg::input::keyboard::KeyboardInput;
 use gg::input::joystick::JoystickInput;
 use gg::games::view_details::{PolarViewDetails, ViewDetails};
-use gg::rendering::{PlainText, StandardPrimitive, PolarPixel, WindowSpec, StandardRenderable};
+use gg::rendering::{WindowSpec};
 use gg::debug::*;
-use na::{Vector4, Rotation2};
+use ::rendering::{PolarPixel, PolarPrimitive, PolarRenderable};
 
 pub struct PolarGame{
     player: Player,
@@ -78,7 +78,7 @@ impl PolarGame {
 }
 
 impl Game for PolarGame {
-    type Primitive = StandardPrimitive;
+    type Primitive = PolarPrimitive;
 
     fn init(&mut self) {
         self.time = Times::new(time::precise_time_s());
@@ -166,7 +166,7 @@ impl Game for PolarGame {
         ViewDetails::Polar(self.view_details.clone())
     }
 
-    fn get_renderables(&mut self, _: WindowSpec) -> Vec<Box<StandardRenderable>> {
+    fn get_renderables(&mut self, _: WindowSpec) -> Vec<Box<PolarRenderable>> {
         debug_clock_start("Render::get_renderables");
         let mut rend_vec: Vec<Part> = Vec::new();
         for f in self.frame.get_render_parts().into_iter(){
@@ -183,8 +183,8 @@ impl Game for PolarGame {
         }
         debug_clock_stop("Render::get_renderables::flares");
         rend_vec.push(sun_part);
-        let mut output: Vec<Box<StandardRenderable>> = rend_vec.into_iter()
-            .map(|p| -> Box<StandardRenderable> {Box::new(PolarPixel::from(p))}).collect();
+        let mut output: Vec<Box<PolarRenderable>> = rend_vec.into_iter()
+            .map(|p| -> Box<PolarRenderable> {Box::new(PolarPixel::from(p))}).collect();
 
         let score_text = self.high_score.get_score_text();
         let record_text = self.high_score.get_record_text();
